@@ -29,7 +29,6 @@
     <ClCompile Include="Order.cpp" />
     <ClCompile Include="product.cpp" />
     <ClCompile Include="seller.cpp" />
-    <ClCompile Include="Source.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="User.cpp" />
   </ItemGroup>

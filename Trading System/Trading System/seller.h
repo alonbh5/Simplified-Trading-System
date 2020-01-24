@@ -13,9 +13,9 @@
 
 using namespace std;
 class Product;
-class Feedback; 
+class Feedback;
 
-class Seller: virtual public User
+class Seller : virtual public User
 {
 public:
 	static const int ALLOCATION_ERROR = -1;
@@ -27,8 +27,9 @@ protected:
 	vector<Feedback*> f_list;
 
 public://Constractur, Move, Destractor
-	Seller(const char* name, const char* password, const Address& OfficeAddress);
-	Seller(Seller&& other);
+	Seller(ifstream& inFile);
+	Seller(const string& name, const string& password, const Address& OfficeAddress);
+	Seller(const Seller& other) = delete;
 	virtual ~Seller();
 
 protected: //Class Protected Methods
@@ -38,9 +39,9 @@ protected: //Class Protected Methods
 
 public: //Class Public Methods
 	friend ostream& operator<<(ostream& os, const Seller& obj);
-	const Seller& operator=(Seller&& other);
+	friend istream& operator>>(istream& in, Seller& user);
 	virtual void save(ofstream& out_file);
-	
+
 
 	//OTHERS
 	bool addNewProductforList(Product* p_data);

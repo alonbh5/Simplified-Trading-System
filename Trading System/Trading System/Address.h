@@ -9,41 +9,44 @@ using namespace std;
 
 class Address
 {
-	public:
+public:
 	static const int MAX_STR_LENGTH = 31;
 	friend class Seller;
 	friend class Buyer;
 	friend class User;
 
-	private:
-		char Street[MAX_STR_LENGTH];
-		char City[MAX_STR_LENGTH];
-		char Country[MAX_STR_LENGTH];
-		int houseNumber;
-		int Zipcode;
+private:
+	string Street;
+	string City;
+	string Country;
+	int houseNumber;
+	int Zipcode;
+	Address() = default; //just for user ctor
 
-	public://Class Public Methods
-		//C'tor
-		Address(const char* street, const int houseNumber, const char* city, const char* country, const int zipcode); 
-		Address(const Address& other) = default; 
-		//Operators
-		const Address& operator=(const Address& other);
-		const Address& operator=(const Address&& other);
-		friend ostream& operator<<(ostream& os, const Address& obj);
+public://Class Public Methods
+	//C'tor
+	Address(const string& street, const int houseNumber, const string& city, const string& country, const int zipcode);
+	Address(const Address& other) = default;
 
-	private://Class Private Methods
-		bool setStreet(const char* street);
-		bool setCity(const char* city);
-		bool setNumber(const int houseNumber);
-		bool setZipcode(const int Zipcode);
-		bool setCountry(const char* Country);
+	//Operators
+	friend ostream& operator<<(ostream& os, const Address& obj);
+	friend istream& operator>>(istream& in, Address& obj);
 
-	public://Class Public Methods
-		const char* getStreet() const;
-		const char* getCity()   const;
-		const char* getCountry()   const;
-		int getNumber()         const;
-		int getZipcode()         const;
-		void show() const;
+private://Class Private Methods
+	bool setStreet(const string& street);
+	bool setCity(const string& city);
+	bool setNumber(const int houseNumber);
+	bool setZipcode(const int Zipcode);
+	bool setCountry(const string& Country);
+	void getStrFromFile(istream& in, string& str, int len); // Helper for loading file
+
+
+public://Class Public Methods
+	const string& getStreet() const;
+	const string& getCity()   const;
+	const string& getCountry()   const;
+	int getNumber()         const;
+	int getZipcode()         const;
+	void show() const;
 };
 #endif // __ADDRESS_H

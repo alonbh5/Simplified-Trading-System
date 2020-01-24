@@ -1,24 +1,17 @@
 ﻿#include "Order.h"
 //---------------------------------------------------------------------------------------------------//
-Order::Order(const Buyer& buyer) :OrderSerialNumber(++OrderCounter) ,buyer(buyer)
+Order::Order(const Buyer& buyer) :OrderSerialNumber(++OrderCounter), buyer(buyer)
 {
 	this->Totalprice = 0.0;
 	this->Payed = false;
-}
-//---------------------------------------------------------------------------------------------------//
-Order::Order(Order &&other) :Totalprice(other.Totalprice), OrderSerialNumber(other.OrderSerialNumber),
-							  buyer(other.buyer), order_list(other.order_list)
-{
-	//cout << "In Order Move c'tor " << endl;
-	other.order_list.clear();
 }
 //---------------------------------------------------------------------------------------------------//
 Order::~Order()
 {
 	//cout << "In desractor of Order\n";
 	vector<Product*>::iterator P_itr = order_list.begin();
-	vector<Product*>::iterator P_itrEnd = order_list.end();	
-	
+	vector<Product*>::iterator P_itrEnd = order_list.end();
+
 	order_list.clear();
 }
 //---------------------------------------------------------------------------------------------------//
@@ -38,19 +31,19 @@ bool Order::setPayed()
 	return true;
 }
 //---------------------------------------------------------------------------------------------------//
-bool Order::getPayed() const             { return this->Payed; }
+bool Order::getPayed() const { return this->Payed; }
 //---------------------------------------------------------------------------------------------------//
-double Order::getprice() const           { return (this->Totalprice); }
+double Order::getprice() const { return (this->Totalprice); }
 //---------------------------------------------------------------------------------------------------//
-const Buyer& Order::getbuyer() const    { return (this->buyer); }
+const Buyer& Order::getbuyer() const { return (this->buyer); }
 //---------------------------------------------------------------------------------------------------//
-int Order::getOrderSerialNumber() const  { return (this->OrderSerialNumber); }
+int Order::getOrderSerialNumber() const { return (this->OrderSerialNumber); }
 //---------------------------------------------------------------------------------------------------//
-vector<Product*> Order::getorderlist() const    { return (this->order_list); }
+vector<Product*> Order::getorderlist() const { return (this->order_list); }
 //---------------------------------------------------------------------------------------------------//
-int Order::getPhysize_orderlist() const  { return((int)this->order_list.capacity()); }
+int Order::getPhysize_orderlist() const { return((int)this->order_list.capacity()); }
 //---------------------------------------------------------------------------------------------------//
-int Order::getLogsize_orderlist() const  {return((int)this->order_list.size());}
+int Order::getLogsize_orderlist() const { return((int)this->order_list.size()); }
 //---------------------------------------------------------------------------------------------------//
 void Order::print() const
 {
@@ -114,9 +107,7 @@ bool Order::AddProducttolist(Product* prod_to_add)
 				}
 				else //add to order list/*
 				{
-					//this->HelperForCallocOrderList(); 
 					this->Totalprice += prod_to_add->getPrice(); //update the total price}
-					//order_list[Logsize_orderlist++] = prod_to_add;
 					order_list.push_back(prod_to_add);
 					cout << "Item had been added to order! " << endl;
 					res = true;
@@ -152,7 +143,7 @@ bool Order::Payment()
 			cout << "Order Already Got Paid!" << endl;
 		else
 			if (!(this->IsAllAvailable()))
-				cout << "Some of the products already got sold, please remove it from the order" << endl;		
+				cout << "Some of the products already got sold, please remove it from the order" << endl;
 			else
 			{
 				this->setPayed();
@@ -166,17 +157,17 @@ bool Order::calculateprice()
 {
 	//caculate price by the prodact list in the order
 
-		double priceX = 0.0;
-		vector<Product*>::iterator P_itr = order_list.begin();
-		vector<Product*>::iterator P_itrEnd = order_list.end();
+	double priceX = 0.0;
+	vector<Product*>::iterator P_itr = order_list.begin();
+	vector<Product*>::iterator P_itrEnd = order_list.end();
 
-		if (this->getLogsize_orderlist() == 0)
-			return false;
+	if (this->getLogsize_orderlist() == 0)
+		return false;
 
-		for(; P_itr!= P_itrEnd; ++P_itr)
-			priceX += (*P_itr)->getPrice();
-		setprice(priceX);
-		return true;
+	for (; P_itr != P_itrEnd; ++P_itr)
+		priceX += (*P_itr)->getPrice();
+	setprice(priceX);
+	return true;
 }
 //---------------------------------------------------------------------------------------------------//
 bool Order::removeFromOrderList(Product* prod_to_del)
@@ -203,7 +194,7 @@ bool Order::removeFromOrderList(Product* prod_to_del)
 			order_list.pop_back();
 		else // P_itr!=P_itrEnd
 		{
-			swap((*P_itr), (*P_itrEnd));
+			iter_swap(P_itr, P_itrEnd);
 			order_list.pop_back();
 		}
 	}
@@ -217,7 +208,7 @@ bool Order::IsAllAvailable() const
 	vector<Product*>::const_iterator P_itr = order_list.begin();
 	vector<Product*>::const_iterator P_itrEnd = order_list.end();
 
-	for(; P_itr!= P_itrEnd; ++P_itr)
+	for (; P_itr != P_itrEnd; ++P_itr)
 		if ((*P_itr)->getAvailable() == false)
 			res = false;
 
@@ -240,7 +231,7 @@ void Order::ClearNotAvailable()
 				order_list.pop_back();
 			else
 			{
-				swap((*P_itr), (*P_itrAddTheLast));
+				iter_swap(P_itr, P_itrAddTheLast);
 				order_list.pop_back();
 			}
 		}
@@ -249,13 +240,13 @@ void Order::ClearNotAvailable()
 //---------------------------------------------------------------------------------------------------//
 bool Order::DidBuyerBuyFromSeller(const Seller* seller) const
 {
-	bool res=false;
-	const char* seller_name = seller->getName();
+	bool res = false;
+	const string seller_name = seller->getName();
 	vector<Product*>::const_iterator P_itr = order_list.begin();
 	vector<Product*>::const_iterator P_itrEnd = order_list.end();
 
 	for (; P_itr != P_itrEnd && !res; ++P_itr)
-		if (strcmp(seller_name, (*P_itr)->getSeller().getName()) == 0) 	
+		if (seller_name == (*P_itr)->getSeller().getName())
 			//if the name of the curent prudct seller is what we are looking
 			if (this->getPayed())
 				res = true;

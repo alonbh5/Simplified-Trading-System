@@ -1,7 +1,7 @@
 #include "Address.h"
 
 //---------------------------------------------------------------------------------------------------//
-Address::Address(const char* street, const int houseNumber, const char* city, const char* country,const int zipcode)
+Address::Address(const string& street, const int houseNumber, const string& city, const string& country, const int zipcode)
 {
 	//cout << "in c'tor Address" << endl;
 	setNumber(houseNumber);
@@ -11,77 +11,37 @@ Address::Address(const char* street, const int houseNumber, const char* city, co
 	setZipcode(zipcode);
 }
 //---------------------------------------------------------------------------------------------------//
-const Address& Address::operator=(const Address& other)
-{
-	if (this != &other)
-	{
-		setStreet(other.Street);
-		setCity(other.City);
-		setCountry(other.Country);
-		setNumber(other.houseNumber);
-		setZipcode(other.Zipcode);
-	}
-	return *this;
-}
-//---------------------------------------------------------------------------------------------------//
-const Address& Address::operator=(const Address&& other)
-{
-	if (this != &other)
-	{
-		setStreet(other.Street);
-		setCity(other.City);
-		setCountry(other.Country);
-		setNumber(other.houseNumber);
-		setZipcode(other.Zipcode);
-	}
-	return *this;
-}
-//---------------------------------------------------------------------------------------------------//
-ostream& operator<<(ostream& os, const Address& obj)
-{
-	if (typeid(os) == typeid(ofstream))
-	{
-		os << strlen(obj.Street) << " " << obj.Street << " " << obj.houseNumber << " " << strlen(obj.City) << " " << obj.City << " " << strlen(obj.Country) << " " << obj.Country << " " << obj.Zipcode;
-	}
-	else
-	{
-		os << obj.houseNumber << " " << obj.Street << ".st " <<
-			obj.City << ", " << obj.Country << " - " << obj.Zipcode << ".";
-	}
-	return os;
-}
-//---------------------------------------------------------------------------------------------------//
-bool Address::setStreet(const char* street)
+bool Address::setStreet(const string& street)
 {
 	//set a Street - if not good reset to "Bad input"
 	int x;
-	x = (int)strlen(street);
+	x = (int)street.size();
 
 	if (x > MAX_STR_LENGTH)
 	{
 		cout << "Street cant be longer then " << MAX_STR_LENGTH - 1 << endl;
-		strcpy(this->Street, "Bad input");
+		Street = "Bad input";
 		return false;
 	}
 
-	strcpy(this->Street, street);
+	Street = street;
 	return true;
 }
 //---------------------------------------------------------------------------------------------------//
-bool Address::setCity(const char* city)
+bool Address::setCity(const string& city)
 {
 	//set a city - if not good reset to "Bad input"
 	int x;
-	x = (int)strlen(city);
+	x = city.size();
 
 	if (x > MAX_STR_LENGTH)
 	{
 		cout << "City cant be longer then " << MAX_STR_LENGTH << endl;
-		strcpy(this->City, "Bad input");
+		City = "Bad input";
 		return false;
 	}
 
-	strcpy(this->City, city);
+	City = city;
 	return true;
 }
 //---------------------------------------------------------------------------------------------------//
@@ -112,37 +72,79 @@ bool Address::setZipcode(const int Zipcode)
 	return true;
 }
 //---------------------------------------------------------------------------------------------------//
-bool Address::setCountry(const char* Country)
+bool Address::setCountry(const string& country)
 {
 	//set a Country - if not good reset to "Bad input"
 
 	int x;
-	x = (int)strlen(Country);
+	x = Country.size();
 
 	if (x > MAX_STR_LENGTH)
 	{
-		cout << "Country cant be longer then " << MAX_STR_LENGTH -1 << endl;
-		strcpy(this->Country, "Bad input");
+		cout << "Country cant be longer then " << MAX_STR_LENGTH - 1 << endl;
+		Country = "Bad input";
 		return false;
 	}
 
-	strcpy(this->Country, Country);
+	Country = country;
 	return true;
 
 }
 //---------------------------------------------------------------------------------------------------//
-const char* Address::getStreet() const {return Street;}
+const string& Address::getStreet() const { return Street; }
 //---------------------------------------------------------------------------------------------------//
-const char* Address::getCity()   const {return City;}
+const string& Address::getCity()   const { return City; }
 //---------------------------------------------------------------------------------------------------//
-const char* Address::getCountry()   const {return Country; }
+const string& Address::getCountry()   const { return Country; }
 //---------------------------------------------------------------------------------------------------//
-int Address::getNumber()         const{return houseNumber;}
+int Address::getNumber()         const { return houseNumber; }
 //---------------------------------------------------------------------------------------------------//
-int Address::getZipcode()         const{return Zipcode;}
+int Address::getZipcode()         const { return Zipcode; }
 //---------------------------------------------------------------------------------------------------//
 void Address::show() const
 {
 	//print the address on screen
 	cout << houseNumber << " " << Street << ".st " << City << ", " << Country << " - " << Zipcode << ".";
 }
+//---------------------------------------------------------------------------------------------------//
+ostream& operator<<(ostream& os, const Address& obj)
+{
+	if (typeid(os) == typeid(ofstream))
+	{
+		os << ((int)obj.Street.size()) << " " << obj.Street << " " << obj.houseNumber << " " << ((int)obj.City.size()) << " " << obj.City << " " << ((int)(obj.Country.size())) << " " << obj.Country << " " << obj.Zipcode;
+	}
+	else
+	{
+		os << obj.houseNumber << " " << obj.Street << ".st " <<
+			obj.City << ", " << obj.Country << " - " << obj.Zipcode << ".";
+	}
+	return os;
+}
+//---------------------------------------------------------------------------------------------------//
+istream& operator>>(istream& in, Address& obj)
+{
+	if (typeid(in) == typeid(ifstream))
+	{
+		int len;
+
+		in >> len;
+		obj.getStrFromFile(in, obj.Street, len);
+		in >> obj.houseNumber;
+		in >> len;
+		obj.getStrFromFile(in, obj.City, len);
+		in >> len;
+		obj.getStrFromFile(in, obj.Country, len);
+		in >> obj.Zipcode;
+
+	}
+	return in;
+}
+//---------------------------------------------------------------------------------------------------//
+void Address::getStrFromFile(istream& in, string& str, int len)
+{
+	in.get();
+	int i;
+	for (i = 0; i < len; i++)
+		str.insert(str.end(), in.get());
+}
+//---------------------------------------------------------------------------------------------------//

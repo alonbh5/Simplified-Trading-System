@@ -12,7 +12,7 @@ using namespace std;
 class Buyer;
 class Product;
 
-class Order 
+class Order
 {
 public:
 	static const int ALLOCATION_ERROR = -1;
@@ -26,16 +26,11 @@ private: ////Class Variables
 	vector<Product*> order_list;
 	bool Payed;
 
-private: //Class Helper Vatiables
-	//int Physize_orderlist;
-	//int Logsize_orderlist;
-
 public: //Constractur, Move, Destractor
-	Order(const Buyer& buyer); //reset with buyer
-	Order(const Order &other) = delete;
-	Order(Order &&other);
+	Order(const Buyer& buyer);
+	Order(const Order& other) = delete;
 	~Order();
-	
+
 	//GETS
 	double getprice() const;
 	const Buyer& getbuyer() const;
@@ -43,28 +38,22 @@ public: //Constractur, Move, Destractor
 	int getPhysize_orderlist() const;
 	int getLogsize_orderlist() const;
 	bool getPayed() const;
-	
-	//SETS
-	//bool setOrderlist();
+
 
 	//OTHER
 	bool AddProducttolist(Product* prod_to_add);
 	bool Payment();
 	void print() const;
 	bool IsAllAvailable() const;
-	//bool RemovePrudFromOrder(Product* prod_to_del);
 	void ClearNotAvailable();
 	bool DidBuyerBuyFromSeller(const Seller* seller) const;
 
 private: //PRIVATE METHODS
-	bool setprice(double price); 
+	bool setprice(double price);
 	bool calculateprice();
 	bool setPayed();
-//	void HelperForCallocOrderList();
 	bool removeFromOrderList(Product* prod_to_del);
 	vector<Product*> getorderlist() const;
-
-	
 };
 
 #endif // !_ORDER_H

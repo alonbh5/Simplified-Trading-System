@@ -16,20 +16,24 @@ public:
 	static constexpr int MAX_LEN_TEXT = 501;
 
 private: //Class variables
-	char  text[MAX_LEN_TEXT];
-	const Buyer* const	buyer;
-	const Date*  const	date;
+	string  text;
+	const string buyer;
+	const Date 	date;
 
 public: ///Constractur
-	Feedback(const char* text,const Buyer* buyer, const Date* date);
-	Feedback(const Feedback &other) = delete;
+	Feedback(const string& text, const Buyer* buyer, const Date date);
+	Feedback(const string& text, const string& buyer, const Date date); //For loading Feedback from file
+	Feedback(const Feedback& other) = delete;
+
 
 private://Class Private Methods
-	void setText(const char* text);
+	void setText(const string& text);
 
 public: //Class Public Methods
-	const Buyer* getBuyer() const;
-	const Date* getDate() const;
+	const string& getText() const;
+	const string& getBuyer() const;
+	const Date& getDate() const;
 	void print() const;
+
 };
 #endif

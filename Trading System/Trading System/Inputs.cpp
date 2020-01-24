@@ -9,39 +9,39 @@ void RunSystem(System& sys)
 
 	while (runTheSystem) //until user Type 11-Exit
 	{
- 		printMenuAndInputDigit(digit);
- 		openFunction(digit,sys, runTheSystem);
+		printMenuAndInputDigit(digit);
+		openFunction(digit, sys, runTheSystem);
 	}
 }
 //---------------------------------------------------------------------------------------------------//
 void printMenuAndInputDigit(int& digit)
 {
 	//void function for printing the menu
-		bool flag = false;
-		cout << "\n\n=================MENU================\n";
-		std::cout << "please Type the relevant number from the following MENU:\n";
-		std::cout << "1- Adding a Seller\n";
-		std::cout << "2- Adding a Buyer\n";
-		std::cout << "3- Adding a Megauser\n";
-		std::cout << "4- Adding a Product To Seller or Megauser's Products List\n";
-		std::cout << "5- Adding a Feedback To Seller or Megauser's Feedback List\n";
-		std::cout << "6- Adding a Product To Buyer or Megauser's Wishlist \n";
-		std::cout << "7- Create a New Order For a Certain Buyer or Megauser\n";
-		std::cout << "8- Pay for a ceratin Order\n";
-		std::cout << "9- Show ONLY the Buyers Deatils In System\n";
-		std::cout << "10- Show ONLY the Sellers Deatils In System\n";
-		std::cout << "11- Show ONLY the MegaUsers Deatils In System\n";
-		std::cout << "12- Show all Products That Goes By a Ceartin Name\n";
-		std::cout << "13- Tests For The Operators\n";
-		std::cout << "14- EXIT\n";
+	bool flag = false;
+	cout << "\n\n=================MENU================\n";
+	std::cout << "please Type the relevant number from the following MENU:\n";
+	std::cout << "1- Adding a Seller\n";
+	std::cout << "2- Adding a Buyer\n";
+	std::cout << "3- Adding a Megauser\n";
+	std::cout << "4- Adding a Product To Seller or Megauser's Products List\n";
+	std::cout << "5- Adding a Feedback To Seller or Megauser's Feedback List\n";
+	std::cout << "6- Adding a Product To Buyer or Megauser's Wishlist \n";
+	std::cout << "7- Create a New Order For a Certain Buyer or Megauser\n";
+	std::cout << "8- Pay for a ceratin Order\n";
+	std::cout << "9- Show ONLY the Buyers Deatils In System\n";
+	std::cout << "10- Show ONLY the Sellers Deatils In System\n";
+	std::cout << "11- Show ONLY the MegaUsers Deatils In System\n";
+	std::cout << "12- Show all Products That Goes By a Ceartin Name\n";
+	std::cout << "13- Tests For The Operators\n";
+	std::cout << "14- EXIT\n";
 
-		while (!flag)
-		{
-			cout << "Type A number: ";
-			cin >> digit;			
-			flag = IsAgoodDigit(digit);
-		}
-		
+	while (!flag)
+	{
+		cout << "Type A number: ";
+		cin >> digit;
+		flag = IsAgoodDigit(digit);
+	}
+
 }
 //---------------------------------------------------------------------------------------------------//
 static void openFunction(int& digit, System& sys, bool& runTheSystem)
@@ -117,24 +117,23 @@ static void openFunction(int& digit, System& sys, bool& runTheSystem)
 	}
 
 	case 14:
-	{	
+	{
 		runTheSystem = false;
 		break;
 	}
 	}
 }
 //---------------------------------------------------------------------------------------------------//
-//---------------------------------------------------------------------------------------------------//
 //MENU - 1 FUNCTION
 static void addSeller(System& sys)
 {
 	//The function get input from user and creating a new seller
 	//by using the currect function in system
-	char name[User::MAX_LEN];
-	char password[User::MAX_LEN];
+	string name;
+	string password;
 	inputForCreatingNewUser(sys, "Seller", name, password);
 	Address address = getAddressFromUser();
-	sys.addSeller(name, password, address,true);
+	sys.addSeller(name, password, address, true);
 }
 //---------------------------------------------------------------------------------------------------//
 //MENU - 2 FUNCTION
@@ -142,38 +141,44 @@ static void addBuyer(System& sys)
 {
 	//The function get input from user and creating a new buyer
 	//by using the currect function in system
-	char name[User::MAX_LEN];
-	char password[User::MAX_LEN];
+	string name;
+	string password;
 	inputForCreatingNewUser(sys, "Buyer", name, password);
 	Address address = getAddressFromUser();
-	sys.addBuyer(name, password, address,true);
+	sys.addBuyer(name, password, address, true);
 }
 //---------------------------------------------------------------------------------------------------//
 //MENU - 3 FUNCTION
 void addMegaUser(System& sys)
 {
-	char name[User::MAX_LEN];
-	char password[User::MAX_LEN];
+	string name;
+	string password;
 	inputForCreatingNewUser(sys, "MegaUser", name, password);
 	Address address = getAddressFromUser();
-	sys.addMegaUser(name, password, address,true);
+	sys.addMegaUser(name, password, address, true);
 }
 //---------------------------------------------------------------------------------------------------//
 //MENU - 4 FUNCTION
-static void addProductToSeller(System &sys)
+static void addProductToSeller(System& sys)
 {
 	//The function get input from user and creating a new product for a certain seller
 	//if seller dosent exist - exit and cout a message to the user
-	char Product_name[Product::MAX_LEN_NAME];
-	char Seller_name[User::MAX_LEN];
-	double price; 
+	string Product_name;
+	string Seller_name;
+	double price;
 	int category;
 	bool flag = false;
 
 	cout << "\n====== Adding A Product To Seller ======\n";
 	cin.ignore();
 	cout << "Type the Name of the new product:\n";
-	cin.getline(Product_name, Product::MAX_LEN_NAME);
+	getline(cin, Product_name);
+	while (Product_name.size() > Product::MAX_LEN_NAME)
+	{
+		cout << "The Max product name is " << Product::MAX_LEN_NAME << " please try again\n";
+		getline(cin, Product_name);
+	}
+
 	while (!flag) // checking the input
 	{
 		cout << "Type the Category of " << Product_name << " :\n" << "1-KIDS, 2-ELECTRICAL, 3-OFFICE, 4-CLOTHING\n";
@@ -191,52 +196,56 @@ static void addProductToSeller(System &sys)
 	}
 	cout << "Type the name of the Seller you want add a product\n";
 	cin.ignore();
-	cin.getline(Seller_name, User::MAX_LEN);
+	getline(cin, Seller_name);
 
 	sys.addProductToSeller(Seller_name, Product_name, price, category);
 }
 //---------------------------------------------------------------------------------------------------//
 //MENU - 5 FUNCTION
-void addFeedbackToSeller(System & sys)
+void addFeedbackToSeller(System& sys)
 {
 	//The function creating a new feedback ONLY if the buyer buy product from seller
 	//This function will get the input from user and using the appropriate System function
-	char buyerName[User::MAX_LEN];
-	char sellerName[User::MIN_LEN_PASSWORD];
-	char text[Feedback::MAX_LEN_TEXT];;
+	string buyerName;
+	string sellerName;
+	string text;;
 	int day, month, year;
 
 	cout << "\n====== Add Feedback To Seller ======\n";
 	cout << "please Type the name of the buyer\n";
 	cin.ignore();
-	cin.getline(buyerName, User::MAX_LEN);
+	getline(cin, buyerName);
 	cout << "please Type the name of the seller you want to write him a Feedback\n";
-	cin.getline(sellerName, User::MAX_LEN);
-
+	getline(cin, sellerName);
 	cout << "please write the Date of Feedback\n";
 	getInputDate(day, month, year);
 
 	cin.ignore();
-	cout << "Please Write your Feedback up to 500 letters\n"; 
-	cin.getline(text, Feedback::MAX_LEN_TEXT);
+	cout << "Please Write your Feedback up to 500 letters\n";
+	getline(cin, text);
+	while (text.size() > Feedback::MAX_LEN_TEXT)
+	{
+		cout << "The Text you wrote is too long, the Max text is " << Feedback::MAX_LEN_TEXT << "characters\n Please try again\n";
+		getline(cin, text);
+	}
 
 	sys.addFeedbackToSeller(buyerName, sellerName, day, month, year, text);
 }
 //---------------------------------------------------------------------------------------------------//
 //MENU - 6 FUNCTION
-void addProductToWishList(System & sys) 
+void addProductToWishList(System& sys)
 {
 	//The function puts products to the wishlist's buyer.
 	//This function will get the input from user and using the appropriate System function
 	int serial;
-	char BuyerName[User::MAX_LEN];
-	char ProductName[Product::MAX_LEN_NAME];
+	string BuyerName;
+	string ProductName;
 
 	cout << "\n====== Adding A Product To Wishlist ======\n";
 	cin.ignore();
 	cout << "please Type the name of the product you want to add\n";
-	cin.getline(ProductName, Product::MAX_LEN_NAME);
-	
+
+	getline(cin, ProductName);
 	//this function will print ONLY the available product by "ProductName"
 	if (!sys.showProductByName(ProductName, "Available"))
 		return;
@@ -247,31 +256,28 @@ void addProductToWishList(System & sys)
 	cout << endl;
 	cout << "Please Type the Name of the buyer\n";
 	cin.ignore();
-	cin.getline(BuyerName, User::MAX_LEN);
-
+	getline(cin, BuyerName);
 	sys.addProductToWishList(BuyerName, serial);
 }
 //---------------------------------------------------------------------------------------------------//
 //MENU - 7 FUNCTION
-void orderList(System & sys)
-{ 
+void orderList(System& sys)
+{
 	//The function will make order list by getting input from the user.
 	//User can add few products to a certain order
-	char BuyerName[User::MAX_LEN];
+	string BuyerName;
 	Buyer* buyer;
 	Order* order;
 	cout << "\n====== Creating a new order ======\n";
 	cout << "Please Type the Name of the buyer you wish to make an order for \n";
 	cin.ignore();
-	cin.getline(BuyerName, User::MAX_LEN);
-	
+	getline(cin, BuyerName);
+
 	order = sys.OpenNewOrderList(BuyerName, &buyer); //open new order
 	if (order)
 	{
 		if (buyer->PrintWishlist())
 			getSerialNumberAndAddProductToOrder(buyer, order, sys);
-
-
 		if (order->getLogsize_orderlist() == 0)
 		{
 			cout << "Cant make empty Order -Order deleted!" << endl;
@@ -282,26 +288,25 @@ void orderList(System & sys)
 
 //---------------------------------------------------------------------------------------------------//
 //MENU - 8 FUNCTION
-void payOrder(System & sys) 
+void payOrder(System& sys)
 {
 	int count = 0;
 	int serial;
 	bool flag = true;
-	char BuyerName[User::MAX_LEN];
+	string BuyerName;
 	Buyer* buyer;
 
 	cout << "\n====== Paying for an Order ======\n";
 	cout << "Please Type the Name of the buyer you wish to complete one of its order \n";
 	cin.ignore();
-	cin.getline(BuyerName, User::MAX_LEN);
-
+	getline(cin, BuyerName);
 	buyer = sys.buyerIsExist(BuyerName);
-	if (!buyer) 
+	if (!buyer)
 	{
 		cout << BuyerName << " does not exist!" << endl;
 		return;
 	}
-	count= buyer->printOrderNotpaid();
+	count = buyer->printOrderNotpaid();
 	if (count == 0) //no order to pay
 	{
 		cout << "No order that not paid\n";
@@ -310,28 +315,28 @@ void payOrder(System & sys)
 	cout << "Type Order Number to pay" << endl;
 	cin >> serial;
 
-	sys.payOrder(buyer,serial);
+	sys.payOrder(buyer, serial);
 }
 //---------------------------------------------------------------------------------------------------//
 //MENU - 9 FUNCTION
-static void printTheSellerList(const System & sys)  { sys.printTheSellerList(); }
+static void printTheSellerList(const System& sys) { sys.printTheSellerList(); }
 //---------------------------------------------------------------------------------------------------//
 //MENU - 10 FUNCTION
-static void PrintTheBuyerList(const System & sys)  { sys.PrintTheBuyerList(); }
+static void PrintTheBuyerList(const System& sys) { sys.PrintTheBuyerList(); }
 //---------------------------------------------------------------------------------------------------//
 //MENU - 11 FUNCTION
 static void PrintTheMegaUserList(const System& sys) { sys.PrintTheMegaUserList(); }
 
 //---------------------------------------------------------------------------------------------------//
 //MENU - 12 FUNCTION
-static void showAllProductByName(const System & sys) 
+static void showAllProductByName(const System& sys)
 {
-	char Product_name[Product::MAX_LEN_NAME];
+	string Product_name;
 
 	cout << "\n====== Searching All The Product By Name ======\n";
 	cout << "Type The name you want to search\n";
 	cin.ignore();
-	cin.getline(Product_name, Product::MAX_LEN_NAME);
+	getline(cin, Product_name);
 	sys.showProductByName(Product_name, "All");
 }
 //---------------------------------------------------------------------------------------------------//
@@ -345,8 +350,7 @@ static void testForTheOperators(const System& sys)
 	cout << "Type The Operators number you want to search\n";
 	int num;
 	cin >> num;
-	//fix ot
-	
+
 	switch (num)
 	{
 	case 1:
@@ -376,16 +380,23 @@ static void testForTheOperators(const System& sys)
 
 
 //============================================HELPERS FUNCTION ==============================================//
-static void inputForCreatingNewUser(System& sys, const char* str, char* name, char* password)
+
+static void inputForCreatingNewUser(System& sys, const string& str, string& name, string& password)
 {
 	bool flagPassword = false, flagName = false;;
+
 
 	cout << "\n====== Adding A " << str << " ======\n";
 	cin.ignore();
 	while (!flagName) // checking the input
 	{
 		cout << "Please Type a Username of the " << str << endl;
-		cin.getline(name, User::MAX_LEN);
+		getline(cin, name);
+		while (name.size() >= User::MAX_LEN)
+		{
+			cout << "The name must contain " << (User::MAX_LEN - 1) << " letters or less." << endl;
+			cout << "Please try again" << endl;
+		}
 		if (!sys.userIsExist(name))
 			flagName = true;
 		else
@@ -396,8 +407,8 @@ static void inputForCreatingNewUser(System& sys, const char* str, char* name, ch
 	while (!flagPassword)// checking the input
 	{
 		cout << "Please Type The Password of " << str << ": " << name << " (Min: 8 characters, Max: 20 characters)\n";
-		cin.getline(password, User::MAX_LEN);
-		flagPassword = CheckThePassword(password, "seller");
+		getline(cin, password);
+		flagPassword = CheckThePassword(password);
 		cout << endl;
 	}
 
@@ -405,7 +416,7 @@ static void inputForCreatingNewUser(System& sys, const char* str, char* name, ch
 
 }
 //---------------------------------------------------------------------------------------------------//
-static void getSerialNumberAndAddProductToOrder(Buyer* buyer,Order *order,System& sys)
+static void getSerialNumberAndAddProductToOrder(Buyer* buyer, Order* order, System& sys)
 {
 	bool flag = true;
 	int sir = 0;
@@ -415,24 +426,24 @@ static void getSerialNumberAndAddProductToOrder(Buyer* buyer,Order *order,System
 	{
 		cout << "Choose the Serial number of the product you wish to add : " << endl;
 		cin >> sir;
-		if (sys.ActivateAddfromBuyer(buyer,sir,order))
+		if (sys.ActivateAddfromBuyer(buyer, sir, order))
 			tempWishlistSize--;
-		
+
 		// asking the user if want to add another product to the order just if the wishlist isn't empty
 		if (tempWishlistSize != 0)
 		{
 			cout << "do you wish to add another item?\n1) Yes\n2) NO" << endl;
-			cin >> sir;	
+			cin >> sir;
 		}
-		if (sir != 1 || tempWishlistSize==0)
+		if (sir != 1 || tempWishlistSize == 0)
 			flag = false;
 
 	}
-	
+
 
 }
 //---------------------------------------------------------------------------------------------------//
-static bool IsAgoodDigit(int & digit)
+static bool IsAgoodDigit(int& digit)
 {
 	//The function check if the digit in the right range
 	if (digit > 0 && digit <= 14)
@@ -447,62 +458,60 @@ static bool IsAgoodDigit(int & digit)
 static Address getAddressFromUser()
 {
 	//Helper function for gets and creates an Address object
-	char street[Address::MAX_STR_LENGTH];
-	char city[Address::MAX_STR_LENGTH];
-	char country[Address::MAX_STR_LENGTH];
+	string street;
+	string city;
+	string country;
 	int houseNumber;
 	int zipCode;
-
+	bool flag = false;
 	cout << "Please enter Street, HouseNumber, City, Country, and ZipCode- one by one\n";
-	cin.getline(street, Address::MAX_STR_LENGTH);
-	cin >> houseNumber;
-	cin.ignore();
-	cin.getline(city, Address::MAX_STR_LENGTH);
-	cin.getline(country, Address::MAX_STR_LENGTH);
-	cin >> zipCode;
+	while (!flag)
+	{
+		getline(cin, street);
+		cin >> houseNumber;
+		cin.ignore();
+		getline(cin, city);
+		getline(cin, country);
+		cin >> zipCode;
+		flag = CheckAddressStrings(street, city, country);
+	}
+
 	return (Address(street, houseNumber, city, country, zipCode));
 
 }
 //---------------------------------------------------------------------------------------------------//
-static bool CheckThePassword(const char* password, const char* type)
+static bool CheckThePassword(const string& password)
 {
 	//Helper function for Checking Password for Buyer and Seller
-	if (strcmp(type, "seller") == 0) // check seller password
-	{
-		if (strlen(password) < User::MIN_LEN_PASSWORD)
-		{
-			cout << "Your Password is Too Short\n";
-			return false;
-		}
-		return true;
-	}
-	if (strcmp(type, "buyer") == 0) // check buyer function
-	{
-		if (strlen(password) < User::MIN_LEN_PASSWORD)
-		{
-			cout << "Your Password is Too Short\n";
-			return false;
-		}
-		return true;
-	}
-	return false;
 
+	if (password.size() < User::MIN_LEN_PASSWORD)
+	{
+		cout << "Your Password is Too Short\n";
+		return false;
+	}
+
+	if (password.size() > User::MAX_LEN)
+	{
+		cout << "Your Password is Too Long\n";
+		return false;
+	}
+	return true;
 }
 //---------------------------------------------------------------------------------------------------//
-static bool IsUserNameExist(const char* name, const char* type, System& sys)
+static bool IsUserNameExist(const string& name, const string& type, System& sys)
 {
 	//Helper function for checking Existed BUYER/SELLER	
-	if (strcmp(type, "seller") == 0)
+	if (type == "seller")
 	{
 		Seller* seller = sys.sellerIsExist(name);
 		if (seller)
 		{
 			cout << "The seller " << name << " is already exist\n";
-				return false;
+			return false;
 		}
 		return true;
 	}
-	if (strcmp(type, "buyer") == 0)
+	if (type == "buyer")
 	{
 		Buyer* buyer = sys.buyerIsExist(name);
 		if (buyer)
@@ -517,7 +526,6 @@ static bool IsUserNameExist(const char* name, const char* type, System& sys)
 //---------------------------------------------------------------------------------------------------//
 static void getInputDate(int& day, int& month, int& year)
 {
-
 	//Helper funciton that gets inputs for DATE 
 	cout << "Day ";
 	cin >> day;
@@ -528,7 +536,7 @@ static void getInputDate(int& day, int& month, int& year)
 	cout << endl;
 }
 //---------------------------------------------------------------------------------------------------//
-static bool IsCategory(int & category)
+static bool IsCategory(int& category)
 {
 	//Helper function for check a right range of category
 	if (category >= 1 && category <= 4)
@@ -536,27 +544,36 @@ static bool IsCategory(int & category)
 	else
 		return false;
 }
+static bool CheckAddressStrings(const string& street, const string& city, const string& country)
+{
+	if (street.size() > Address::MAX_STR_LENGTH || city.size() > Address::MAX_STR_LENGTH || country.size() > Address::MAX_STR_LENGTH)
+	{
+		cout << "your Street | city | country is too long\n Len should be Max: " << Address::MAX_STR_LENGTH << "characteres\nTry Again\n";
+		return false;
+	}
+	return true;
+}
 //---------------------------------------------------------------------------------------------------//
 static void TestOprator1(const System& sys)
 {
 	Buyer* buyer1, * buyer2;
-	char str[User::MAX_LEN];
+	string str;
 
-	cout << "Test 1:for If Buyer 1 Total Wishlish Price is Bigger (>) Then Buyer 2 "<<endl;
+	cout << "Test 1:for If Buyer 1 Total Wishlish Price is Bigger (>) Then Buyer 2 " << endl;
 	cout << "Enter Name of Buyer 1 :";
 	cin.ignore();
-	cin.getline(str,User::MAX_LEN);
+	getline(cin, str);
 	cout << endl;
 	buyer1 = sys.buyerIsExist(str);
 	if (buyer1)
 	{
 		cout << "Enter Name of Buyer 2 :";
-		cin.getline(str, User::MAX_LEN);
+		getline(cin, str);
 		cout << endl;
 		buyer2 = sys.buyerIsExist(str);
 		if (buyer2)
 		{
-			if (*buyer1 > *buyer2)
+			if (*buyer1 > * buyer2)
 			{
 				cout << "Buyer1 - " << buyer1->getName() << " Wishlist Price Is Bigger then Buyer 2 - " << buyer2->getName() << endl;
 			}
@@ -574,7 +591,7 @@ static void TestOprator1(const System& sys)
 	}
 	else
 	{
-		cout << "Sorry Buyer: " << str << " was not found" << endl << "exiting > test"<<endl;
+		cout << "Sorry Buyer: " << str << " was not found" << endl << "exiting > test" << endl;
 	}
 
 }

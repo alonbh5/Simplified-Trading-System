@@ -16,31 +16,31 @@ public:
 	static const int MAX_LEN = 21;
 
 protected:
-	char name[MAX_LEN];
-	char password[MAX_LEN];
+	string name;
+	string password;
 	Address address;
 
 public:  //Constractur, Move, Destractor
-	User(const char* name, const char* password, const Address& address);
-	User(const User& user) = delete; 
-	User(User&& other); 
-	virtual ~User(); 
+	User(ifstream& inFile);
+	User(const string& name, const string& password, const Address& address);
+	User(const User& user) = delete;
+	virtual ~User();
 
 public:  //Class Public Methods
-	const char* getName() const;
+	const string& getName() const;
 	const Address& getAddress() const;
 	virtual void save(ofstream& out_file);
 
 protected: //Class Protected Methods
+	friend istream& operator>>(istream& inFile, User& user);
 	bool setAddress(const Address& address);
-	bool setName(const char* name);
-	bool setPassword(const char* password);
+	bool setName(const string& name);
+	bool setPassword(const string& password);
 	Address& getAddress();
-	const char* getPassword() const;
+	const string& getPassword() const;
 	virtual void show() const = 0; //obstarction 
+	void getStrFromFile(istream& in, string& str, int len);  // Helper for loading file
+
 };
-
-
-
 
 #endif // _USER_H

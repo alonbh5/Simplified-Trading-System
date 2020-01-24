@@ -1,36 +1,37 @@
 #include"Seller.h"
 
-Seller::Seller(const char* name, const char* password, const Address& OfficeAddress) : User(name,password,OfficeAddress)
+Seller::Seller(ifstream& inFile) :User(inFile)
+{
+	inFile >> *this;
+}
+
+Seller::Seller(const string& name, const string& password, const Address& OfficeAddress) : User(name, password, OfficeAddress)
 {
 	//cout << "In constractor of SELLER\n";
 }
+
 //---------------------------------------------------------------------------------------------------//
-Seller::Seller(Seller &&other):
-	User(other.name,other.password,other.address)
-{
-	*this = move(other);
-}
-//---------------------------------------------------------------------------------------------------//
-const Seller& Seller::operator=(Seller&& other)
-{
-	if (this != &other)
-	{
-		p_list = other.p_list;
-		f_list = other.f_list;
-		other.f_list.clear();
-		other.p_list.clear();
-	}
-	return *this;
-}
+
 void Seller::save(ofstream& out_file)
 {
 	User::save(out_file);
+	vector<Feedback*>::const_iterator F_itr = f_list.begin();
+	vector<Feedback*>::const_iterator F_itrEnd = f_list.end();
+	out_file << " " << this->f_list.size();
+	for (; F_itr != F_itrEnd; ++F_itr)
+	{
+		out_file << " " << (*F_itr)->getBuyer().size() << " " << (*F_itr)->getBuyer()
+			<< " " << (*F_itr)->getDate().getDay() << " " << (*F_itr)->getDate().getMonth() << " " << (*F_itr)->getDate().getYear()
+			<< " " << (*F_itr)->getText().size() << " " << (*F_itr)->getText();
+
+
+	}
 }
 //---------------------------------------------------------------------------------------------------//
 Seller::~Seller()
 {
 	//cout << "In desractor of SELLER\n";
-	
+
 	vector<Product*>::iterator P_itr = p_list.begin();
 	vector<Product*>::iterator P_itrEnd = p_list.end();
 	vector<Feedback*>::iterator F_itr = f_list.begin();
@@ -41,7 +42,7 @@ Seller::~Seller()
 		delete(*P_itr);
 
 	//deleting the feedback list
-	for(; F_itr!=F_itrEnd;++F_itr)
+	for (; F_itr != F_itrEnd; ++F_itr)
 		delete(*F_itr);
 
 	p_list.clear();
@@ -60,14 +61,14 @@ bool Seller::addNewProductforList(Product* p_data)
 	return true;
 }
 //---------------------------------------------------------------------------------------------------//
-bool Seller::addNewFeedbackforList(Feedback * f_data)
+bool Seller::addNewFeedbackforList(Feedback* f_data)
 {
 	//The function add new feedback to the Feedback list
 	f_list.push_back(f_data);
 	return true;
 }
 //---------------------------------------------------------------------------------------------------//
-Product * Seller::findCertainProductInList(const int sir_num) const
+Product* Seller::findCertainProductInList(const int sir_num) const
 {
 	//The function find a certain product by comparing the serial number
 	//if the product found in the products list of the seller- return product*
@@ -82,16 +83,16 @@ Product * Seller::findCertainProductInList(const int sir_num) const
 	return nullptr;
 }
 //---------------------------------------------------------------------------------------------------//
-int Seller::AmountOfProductList() const {return (int)p_list.size();}
+int Seller::AmountOfProductList() const { return (int)p_list.size(); }
 //---------------------------------------------------------------------------------------------------//
-int Seller::AmountOfFeedback() const {return (int)f_list.size();}
+int Seller::AmountOfFeedback() const { return (int)f_list.size(); }
 //---------------------------------------------------------------------------------------------------/
 void Seller::printProductList() const
 {
 	cout << "======THE PRODUCTS LIST OF " << this->name << "======\n";
 	vector<Product*>::const_iterator P_itr = p_list.begin();
 	vector<Product*>::const_iterator P_itrEnd = p_list.end(); \
-	int idx = 0;
+		int idx = 0;
 	for (; P_itr != P_itrEnd; ++P_itr)
 	{
 		cout << (idx + 1) << ") ";
@@ -101,12 +102,12 @@ void Seller::printProductList() const
 }
 //---------------------------------------------------------------------------------------------------//
 void Seller::printFeedbackList() const
-{ 
+{
 	cout << "======THE FEEDBACKS LIST OF " << this->name << "======\n";
 	vector<Feedback*>::const_iterator F_itr = f_list.begin();
 	vector<Feedback*>::const_iterator F_itrEnd = f_list.end();
 	int idx = 0;
-	for(;F_itr!=F_itrEnd;++F_itr)
+	for (; F_itr != F_itrEnd; ++F_itr)
 	{
 		cout << (idx + 1) << ") ";
 		(*F_itr)->print();
@@ -117,14 +118,36 @@ void Seller::printFeedbackList() const
 void Seller::show() const
 {
 	User::show();
-	cout << " | Products: " << this->AmountOfProductList() << " items." << endl; 
-	//maybe to show available and not available?/
+	cout << " | Products: " << this->AmountOfProductList() << " items." << endl;
+	cout << " | Feedbacks: " << this->AmountOfFeedback() << " feedback." << endl;
 }
 //---------------------------------------------------------------------------------------------------//
 ostream& operator<<(ostream& os, const Seller& obj)
 {
 	os << "UserName: " << obj.name << " | Address: " << obj.address
-		<< " | Products: " << obj.AmountOfProductList() << " items.";
+		<< " | Products: " << obj.AmountOfProductList() << " items. | Feedbacks: " << obj.AmountOfFeedback() << " feedbacks. ";
 	return os;
+}
+
+istream& operator>>(istream& in, Seller& user)
+{
+	if (typeid(in) == typeid(ifstream))
+	{
+		int feedlen;
+		string buyerName, text;
+		int day, year, month;
+		int len;
+		in >> feedlen;
+		for (int i = 0; i < feedlen; i++)
+		{
+			in >> len;
+			user.getStrFromFile(in, buyerName, len);
+			in >> day >> month >> year;
+			in >> len;
+			user.getStrFromFile(in, text, len);
+			user.f_list.push_back(new Feedback(text, buyerName, Date(day, month, year)));
+		}
+	}
+	return in;
 }
 //---------------------------------------------------------------------------------------------------//

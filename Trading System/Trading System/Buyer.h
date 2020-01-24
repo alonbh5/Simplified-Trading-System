@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include <string.h>
 #include "product.h"
 #include "Address.h"
@@ -14,6 +15,7 @@
 #pragma warning(disable : 4996)
 using namespace std;
 
+
 //Declaration for Classes using in Class Buyer
 class Product;
 class Address;
@@ -22,7 +24,7 @@ class Date;
 class Feedback;
 
 
-class Buyer: virtual public User
+class Buyer : virtual public User
 {
 public:
 	static const int ALLOCATION_ERROR = -1;
@@ -30,32 +32,31 @@ public:
 
 protected: //Class Variables 
 	vector<Product*> Wishlist;
-	vector<Order*> order_history;		
+	vector<Order*> order_history;
 
-protected: 
+protected:
 	// METHODS THAT ONLY FRIENDS AND INHERITANCE CALSS COULD USED
 	vector<Product*> getWishlist() const;
 	vector<Order*> getOrderhistory() const;
 
 public: //Class Public Methods
 	//Constractur, Move, Destractor 
-	Buyer(const char* name, const char* password, const Address& home_address); 
-	Buyer(const Buyer &other) = delete; 
-	Buyer(Buyer &&other); 
+	Buyer(ifstream& inFile);
+	Buyer(const string& name, const string& password, const Address& home_address);
+	Buyer(const Buyer& other) = delete;
 	virtual ~Buyer();
 
 	//OPERATORS
-	const Buyer& operator=(Buyer&& other);
 	friend ostream& operator<<(ostream& os, const Buyer& obj);
 	bool operator>(const Buyer& other);
 	bool operator<(const Buyer& other);
 
 	//GETS
-	 int getPhysize_wishlist() const;
-	 int getLogsize_wishlist() const;
-	 int getPhysize_history() const;
-	 int getLogsize_history() const;
-	
+	int getPhysize_wishlist() const;
+	int getLogsize_wishlist() const;
+	int getPhysize_history() const;
+	int getLogsize_history() const;
+
 	//OTHERS
 	bool FindinWIshlist(const Product* FindMe) const;
 	bool DidyouBuyfromSeller(const Seller* seller) const;
@@ -72,7 +73,7 @@ protected: //Class Protected Methods
 	bool removeProdctfromWislist(Product* p_data);
 	void addOrdertoHistory(Order* order);
 	void removeLastOrderFromHistory();
-	double calculateWishlist() const;	
+	double calculateWishlist() const;
 };
 
 #endif // _BUYER_H

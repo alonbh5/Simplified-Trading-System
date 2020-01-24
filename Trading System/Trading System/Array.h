@@ -93,7 +93,7 @@ int Array<T>::getLogical() const
 }
 
 template<class T>
-T* Array<T>::getArr() 
+T* Array<T>::getArr()
 {
 	return this->arr;
 }

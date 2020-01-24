@@ -1,17 +1,16 @@
 ﻿#include "Buyer.h"
 
+Buyer::Buyer(ifstream& inFile) :User(inFile)
+{
+}
+
 //---------------------------------------------------------------------------------------------------//
-Buyer::Buyer(const char* name, const char* password, const Address& home_address) :User(name, password, home_address)
+Buyer::Buyer(const string& name, const string& password, const Address& home_address) : User(name, password, home_address)
 {
 	//cout << "in c'tor Buyer" << endl;
 }
+
 //---------------------------------------------------------------------------------------------------//
-Buyer::Buyer(Buyer &&other) : User(other.name, other.password, other.address)
-{
-	//cout << "in MOVE c'tor Buyer" << endl;
-	*this = move(other);
-}
-//--------------------------------------------------------------------------------------------------//
 Buyer::~Buyer()
 {
 	//cout << "in d'tor Buyer" << endl;
@@ -27,25 +26,13 @@ Buyer::~Buyer()
 		delete (*O_itr);
 	order_history.clear();
 
-	
-}
-//---------------------------------------------------------------------------------------------------//
-const Buyer& Buyer::operator=(Buyer&& other)
-{
-	if (this != &other)
-	{
-		order_history = other.order_history;
-		Wishlist = other.Wishlist;
-		other.order_history.clear();
-		other.Wishlist.clear();
-	}
-	return *this;
+
 }
 //---------------------------------------------------------------------------------------------------//
 ostream& operator<<(ostream& os, const Buyer& obj)
 {
 	os << "UserName: " << obj.name << " | Address: " << obj.address
-		<< " | Products: " << obj.getLogsize_wishlist()<< " items in Wish list." << endl
+		<< " | Products: " << obj.getLogsize_wishlist() << " items in Wish list." << endl
 		<< "| He Ordered :" << obj.getLogsize_history() << " Times in the past." << endl;
 	return os;
 }
@@ -64,32 +51,33 @@ int Buyer::getPhysize_wishlist() const { return (int)this->Wishlist.capacity(); 
 //---------------------------------------------------------------------------------------------------//
 int Buyer::getLogsize_wishlist() const { return (int)this->Wishlist.size();; }
 //---------------------------------------------------------------------------------------------------//
-vector<Order*> Buyer::getOrderhistory() const {	return(this->order_history); }
- //---------------------------------------------------------------------------------------------------//
- vector<Product*> Buyer::getWishlist() const  {return (this->Wishlist);}
- //---------------------------------------------------------------------------------------------------//
- int Buyer::getPhysize_history() const { return (int)this->order_history.capacity(); }
+vector<Order*> Buyer::getOrderhistory() const { return(this->order_history); }
 //---------------------------------------------------------------------------------------------------//
-int Buyer::getLogsize_history() const {return (int)this->order_history.size();}
+vector<Product*> Buyer::getWishlist() const { return (this->Wishlist); }
 //---------------------------------------------------------------------------------------------------//
-void Buyer::show() const 
+int Buyer::getPhysize_history() const { return (int)this->order_history.capacity(); }
+//---------------------------------------------------------------------------------------------------//
+int Buyer::getLogsize_history() const { return (int)this->order_history.size(); }
+//---------------------------------------------------------------------------------------------------//
+void Buyer::show() const
 {
 	//print buyer info
 	cout << "Username: " << name << " | Address: ";
 	this->address.show();
-	cout<< " | Products: " << this->getLogsize_wishlist() << " items in Wish list." << endl;
+	cout << " | Products: " << this->getLogsize_wishlist() << " items in Wish list." << endl;
 	cout << "| He Ordered :" << this->getLogsize_history() << " Times in the past." << endl;
 }
 //---------------------------------------------------------------------------------------------------//
 void Buyer::showwithpass() const
 {
 	//print buyer info wish password
-	cout << "Buyer username is " << name << " from " << endl; 
+	cout << "Buyer username is " << name << " from " << endl;
 	this->address.show();
 	cout << " His password is  " << password << endl;
 	cout << ", He has " << this->getLogsize_wishlist() << " items in Wish list." << endl;
 	cout << " He Ordered " << this->getLogsize_history() << "Times in the past." << endl;
 }
+//---------------------------------------------------------------------------------------------------//
 void Buyer::save(ofstream& out_file)
 {
 	User::save(out_file);
@@ -104,7 +92,7 @@ bool Buyer::FindinWIshlist(const Product* FindMe) const
 	vector<Product*>::const_iterator W_itr = this->Wishlist.begin();
 	vector<Product*>::const_iterator W_itrEnd = this->Wishlist.end();
 
-	for(; W_itr!=W_itrEnd && !res; ++W_itr)
+	for (; W_itr != W_itrEnd && !res; ++W_itr)
 		if (sir == (*W_itr)->getSerialNumber())
 			res = true;
 	return res;
@@ -117,7 +105,7 @@ bool Buyer::DidyouBuyfromSeller(const Seller* seller) const
 	vector<Order*>::const_iterator O_itr = order_history.begin();
 	vector<Order*>::const_iterator O_itrEnd = order_history.end();
 
-	for(; O_itr!= O_itrEnd;++O_itr)
+	for (; O_itr != O_itrEnd; ++O_itr)
 		res = (*O_itr)->DidBuyerBuyFromSeller(seller);
 	return res;
 }
@@ -137,7 +125,7 @@ bool Buyer::removeProdctfromWislist(Product* p_data)
 	vector<Product*>::iterator W_itr = this->Wishlist.begin();
 	vector<Product*>::iterator W_itrEnd = this->Wishlist.end();
 
-	for(; W_itr!= W_itrEnd && !res; ++W_itr)
+	for (; W_itr != W_itrEnd && !res; ++W_itr)
 		if (sir == (*W_itr)->getSerialNumber())
 			res = true;
 	if (res)
@@ -148,8 +136,8 @@ bool Buyer::removeProdctfromWislist(Product* p_data)
 			Wishlist.pop_back();
 		else // W_itr!=W_itrEnd
 		{
-			
-			swap((*W_itr), (*W_itrEnd));
+
+			iter_swap(W_itr, W_itrEnd);
 			Wishlist.pop_back();
 		}
 	}
@@ -161,6 +149,8 @@ void Buyer::addOrdertoHistory(Order* order)
 	//add order to order list
 	order_history.push_back(order);
 }
+//---------------------------------------------------------------------------------------------------//
+
 void Buyer::removeLastOrderFromHistory()
 {
 	this->order_history.pop_back();
@@ -263,5 +253,4 @@ bool Buyer::AddProductToACertainOrder(Order* order, const int sir)
 	return false;
 }
 //---------------------------------------------------------------------------------------------------//
-
 

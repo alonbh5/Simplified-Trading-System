@@ -30,7 +30,7 @@ bool Date::setMonth(const int month)
 		this->Month = 1;
 		return false;
 	}
-	
+
 	this->Month = month;
 	return true;
 }
@@ -44,16 +44,16 @@ bool Date::setYear(const int year)
 		this->Year = 2020;
 		return false;
 	}
-	
+
 	this->Year = year;
 	return true;
 }
 //---------------------------------------------------------------------------------------------------//
-int Date::getDay()  const {return Day;}
+int Date::getDay()  const { return Day; }
 //---------------------------------------------------------------------------------------------------//
-int Date::getMonth() const {return Month;}
+int Date::getMonth() const { return Month; }
 //---------------------------------------------------------------------------------------------------//
-int Date::getYear() const {return Year;}
+int Date::getYear() const { return Year; }
 //---------------------------------------------------------------------------------------------------//
 void Date::show() const
 {

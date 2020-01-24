@@ -27,36 +27,29 @@ private: //Class variables
 	Array<User*> users;
 
 private: //Class helper variables
-	 //int logical_size_array;
-	 //int physical_size_array;
-	 int numOfSellers;
-	 int numOfBuyers;
-	 int numOfMegauser;
+	int numOfSellers;
+	int numOfBuyers;
+	int numOfMegauser;
 public:
 	static constexpr int MAX_LEN_NAME = 21;
-	static constexpr int ALLOCATION_ERROR =-1;
+	static constexpr int ALLOCATION_ERROR = -1;
 
 public:  //Constractur, Move, Copy, Destractor
 	System();
-	System(const System &other) = delete;
-	System(System &&other) = delete;
+	System(const System& other) = delete;
+	System(System&& other) = delete;
 	~System();
 
-private: //Class Private Methods
-	//void setLogicalPhysical();
-	//void setAllocationUsers();
-	//void HelperForCallocUsersList();
-
 public: //Class Public Methods
-	bool addSeller(const char* name, const char* password, Address& address, bool print);
-	bool addBuyer(const char* name, const char* password, Address& address, bool print);
-	bool addMegaUser(const char* name, const char* password, Address& address, bool print);
-	bool addProductToSeller(const char* sellerName, const char* productName, const double price, const int category); 
-	bool addFeedbackToSeller(const char* buyerName, const char* sellerName, const int day, const int month, const int year, const char* text); //I used buyer but add from seller
-	void addProductToWishList(const char* buyerName, const int prod_serial); 
-	Order* OpenNewOrderList(const char* Buyername, Buyer** buyer);
-	bool payOrder(Buyer *buyer,int order_sir);
-	bool showProductByName(const char* data, const char* type) const;
+	bool addSeller(const string& name, const string& password, Address& address, bool print);
+	bool addBuyer(const string& name, const string& password, Address& address, bool print);
+	bool addMegaUser(const string& name, const string& password, Address& address, bool print);
+	bool addProductToSeller(const string& sellerName, const string& productName, const double price, const int category);
+	bool addFeedbackToSeller(const string& buyerName, const string& sellerName, const int day, const int month, const int year, const string& text); //I used buyer but add from seller
+	void addProductToWishList(const string& buyerName, const int prod_serial);
+	Order* OpenNewOrderList(const string& Buyername, Buyer** buyer);
+	bool payOrder(Buyer* buyer, int order_sir);
+	bool showProductByName(const string& data, const string& type) const;
 	void printTheSellerList() const;
 	void PrintTheBuyerList() const;
 	void PrintTheMegaUserList() const;
@@ -68,16 +61,16 @@ public: //Class Public Methods
 
 	//HELPER
 	Array<User*> getUsersList() const;
-	Seller* sellerIsExist(const char* name) const;
-	Buyer* buyerIsExist(const char* name) const;
-	Megauser* MegauserIsExist(const char* name) const;
-	User* userIsExist(const char* name) const;
+	Seller* sellerIsExist(const string& name) const;
+	Buyer* buyerIsExist(const string& name) const;
+	Megauser* MegauserIsExist(const string& name) const;
+	User* userIsExist(const string& name) const;
 	Product* HelperFindACeratinProduct(const int prod_serial, bool& found);
-	bool ActivateAddfromBuyer(Buyer* buyer,int sir,Order* order);
+	bool ActivateAddfromBuyer(Buyer* buyer, int sir, Order* order);
 	void DeleteLastOrder(Buyer* buyer);
 	void SaveUsers(const char* file_name);
-	void LoadUsers(const char* file_name);
-	void getStrFromFile(ifstream& in, char* str, int len);
+	void LoadUsers(const string& file_name);
+	void getStrFromFile(ifstream& in, string& str, int len);
 
 	//OPERATORS
 	const System& operator+=(Seller& other);

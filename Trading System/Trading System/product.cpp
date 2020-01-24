@@ -2,10 +2,10 @@
 
 int Product::conterSerial = 1000;
 //---------------------------------------------------------------------------------------------------//
-static const char* CategoryPro[] = { "Kids", "Electrical", "Office", "Clothing" };
+static const string CategoryPro[] = { "Kids", "Electrical", "Office", "Clothing" };
 //---------------------------------------------------------------------------------------------------//
-Product::Product(const char* name,const int category, const Seller& seller, const double price) :
-	serialnumber(++conterSerial), seller(seller),available(available)
+Product::Product(const string& name, const int category, const Seller& seller, const double price) :
+	serialnumber(++conterSerial), seller(seller), available(available)
 {
 	//cout << "in ctor PRODUCT\n" << endl;
 	setAvailable(true);
@@ -23,14 +23,7 @@ Product::Product(const Product& other) :serialnumber(++conterSerial), price(othe
 	int temp = (int)other.category;
 	setCategory(temp);
 }
-//---------------------------------------------------------------------------------------------------//
-Product::Product(Product&& other) :
-	price(other.price), serialnumber(other.serialnumber), seller(other.seller),available(other.available)
-{
-	//cout << "In PRODUCT move c'tor for " << name << endl;
-	setName(other.name);
-	setCategory(other.category);
-}
+
 //---------------------------------------------------------------------------------------------------//
 Product::~Product()
 {
@@ -39,15 +32,15 @@ Product::~Product()
 	//this->seller = nullptr;
 }
 //---------------------------------------------------------------------------------------------------//
-bool Product::setName(const char* name)
+bool Product::setName(const string& name)
 {
 	//The function check the input and set the Name
-	if (strlen(name) >= MAX_LEN_NAME)
+	if (name.size() >= MAX_LEN_NAME)
 	{
 		cout << "The name must contain " << (MAX_LEN_NAME - 1) << " letters or less." << endl;
 		return false;
 	}
-	strcpy(this->name, name);
+	this->name = name;
 	return true;
 }
 //---------------------------------------------------------------------------------------------------//
@@ -77,9 +70,9 @@ void Product::setAvailable(const bool flag)
 		this->available = false;
 }
 //---------------------------------------------------------------------------------------------------//
-void Product::setBuyer(const Buyer* buyer){this->buyer = buyer;}
+void Product::setBuyer(const Buyer* buyer) { this->buyer = buyer; }
 //---------------------------------------------------------------------------------------------------//
-const char* Product::getName() const { return name; };
+const string& Product::getName() const { return name; };
 //---------------------------------------------------------------------------------------------------//
 double Product::getPrice() const { return price; };
 //---------------------------------------------------------------------------------------------------//
@@ -87,7 +80,7 @@ int Product::getCategory() const { return (int)category; };
 //---------------------------------------------------------------------------------------------------//
 int Product::getSerialNumber() const { return serialnumber; }
 //---------------------------------------------------------------------------------------------------//
-const Seller & Product::getSeller() const
+const Seller& Product::getSeller() const
 {
 	//The function return the address of the product's seller
 	return seller;
@@ -108,25 +101,24 @@ int Product::getHowManyProductsInSystem() const
 //---------------------------------------------------------------------------------------------------//
 void Product::print() const
 {
-		cout << "Name of product: " << name << " | Category:" << CategoryPro[category]
+	cout << "Name of product: " << name << " | Category:" << CategoryPro[category]
 		<< " | Price:" << price << " | Serial Number: " << serialnumber << " | Name of Seller: " << seller.getName();
-		if (getAvailable())
-			cout << " | Availabilty: AVAILABLE\n";
-		else
-			cout << " | Availabilty: NOT AVAILABLE\n";
+	if (getAvailable())
+		cout << " | Availabilty: AVAILABLE\n";
+	else
+		cout << " | Availabilty: NOT AVAILABLE\n";
 }
 //---------------------------------------------------------------------------------------------------//
-ostream& operator<<(ostream & os, const Product & prod)
+ostream& operator<<(ostream& os, const Product& prod)
 {
-	 os << "Name of product : " << prod.name << " | Category : " << CategoryPro[prod.category]
-	 << " | Price:" << prod.price << " | Serial Number: " << prod.serialnumber
-	<< " | Name of Seller: " << prod.seller.getName();
+	os << "Name of product : " << prod.name << " | Category : " << CategoryPro[prod.category]
+		<< " | Price:" << prod.price << " | Serial Number: " << prod.serialnumber
+		<< " | Name of Seller: " << prod.seller.getName();
 
-		 if (prod.getAvailable())
-			 os << " | Availabilty: AVAILABLE\n";
-		 else
-			 os << " | Availabilty: NOT AVAILABLE\n";
-	 return os;
+	if (prod.getAvailable())
+		os << " | Availabilty: AVAILABLE\n";
+	else
+		os << " | Availabilty: NOT AVAILABLE\n";
+	return os;
 }
 //---------------------------------------------------------------------------------------------------//
-
